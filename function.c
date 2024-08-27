@@ -12,7 +12,7 @@
     };
 
 
-void studentRegistration(){
+int studentRegistration(){
 
     int choice;
 

@@ -23,8 +23,7 @@ int studentRegistration(){
     printf("\t\t\t1.Add a new student.\n"
            "\t\t\t2.Show all student.\n"
            "\t\t\t3.Search student.\n"
-           "\t\t\t4.Delete all students information.\n"
-           "\t\t\t5.Exit.\n\n");
+           "\t\t\t4.Exit.\n\n");
 
            printf("\t\t\tPlease enter your choice: ");
            scanf("\t\t\t%d",&choice);
@@ -51,13 +50,6 @@ int studentRegistration(){
             break;
 
             case 4:
-            system("cls");
-            studentDelete();
-            system("cls");
-            goto controlMenuChde;
-            break;
-
-            case 5:
             exit(0);
             break;
 
@@ -122,6 +114,7 @@ int studAdd(){
 int studentSearch() {
     int idSearcher;
     int found = 0;
+    char line[255];
 
     printf("\n\n\n\n\t\t\tYou can search student by ID.");
     printf("\n\n\t\t\tEnter student ID here: ");
@@ -129,31 +122,37 @@ int studentSearch() {
 
     struct students pick;
 
-    FILE * fileForStud = fopen("student.txt","r");
-    if(fileForStud == NULL){
-     puts("File Open Error");
-     perror("Error:");
-     return -1;
+    FILE *fileForStud = fopen("student.txt", "r");
+    if (fileForStud == NULL) {
+        puts("File Open Error");
+        perror("Error:");
+        return -1;
     }
 
-    if(fread(&pick,sizeof(struct students),1,fileForStud) == 1 ){
+    while (fgets(line, sizeof(line), fileForStud)) {
+        if (sscanf(line, "Student id is %d", &pick.id) == 1 && pick.id == idSearcher) {
+            found = 1;
 
-       if(pick.id == idSearcher){
-          found = 1;
+            fgets(line, sizeof(line), fileForStud);
+            sscanf(line, "Student name is %s", pick.name);
 
-        printf("\n=============\n");
+            fgets(line, sizeof(line), fileForStud);
+            sscanf(line, "Student lastname is %s", pick.lastName);
 
-        printf("Student id is %d\n",pick.id);
-        printf("Student name is %s\n",pick.name);
-        printf("Student lastname is %s\n",pick.lastName);
-        printf("Student cource is %s\n",pick.cource);
+            fgets(line, sizeof(line), fileForStud);
+            sscanf(line, "Student cource is %s", pick.cource);
 
-        printf("=============");
-
-       }
+            printf("\n\t\t\t=============\n");
+            printf("\t\t\tStudent id is %d\n", pick.id);
+            printf("\t\t\tStudent name is %s\n", pick.name);
+            printf("\t\t\tStudent lastname is %s\n", pick.lastName);
+            printf("\t\t\tStudent cource is %s\n", pick.cource);
+            printf("\t\t\t=============");
+            break;
+        }
     }
 
-    if(!found){
+    if (!found) {
         printf("\n\t\t\tWrong student ID.");
     }
 
@@ -161,10 +160,4 @@ int studentSearch() {
 
     Sleep(4000);
     return 0;
-}
-
-
-int studentDelete(){
-
-   return 0;
 }
